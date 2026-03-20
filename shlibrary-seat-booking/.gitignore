@@ -1,0 +1,11 @@
+node_modules/
+playwright-report/
+test-results/
+.tmp/
+debug/
+captures/
+*.log
+.DS_Store
+profiles/
+.env
+.env.local
