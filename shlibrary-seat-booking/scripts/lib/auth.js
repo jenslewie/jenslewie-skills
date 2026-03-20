@@ -88,12 +88,7 @@ function buildUsePageHeaders(auth) {
 }
 
 function hasAnyEnvAuth() {
-  return [
-    process.env.SHL_LIBRARY_ACCESS_TOKEN,
-    process.env.SHL_LIBRARY_SIGN,
-    process.env.SHL_LIBRARY_TIMESTAMP,
-    process.env.SHL_LIBRARY_X_ENCODE
-  ].some((value) => value);
+  return false;
 }
 
 function isAuthExpiredResult(result) {
@@ -111,28 +106,6 @@ function isAuthExpiredResult(result) {
 
 function getAuth(input = null) {
   const authContext = normalizeAuthContext(input);
-  const envAuth = {
-    accessToken: process.env.SHL_LIBRARY_ACCESS_TOKEN,
-    sign: process.env.SHL_LIBRARY_SIGN,
-    timestamp: process.env.SHL_LIBRARY_TIMESTAMP,
-    xEncode: process.env.SHL_LIBRARY_X_ENCODE
-  };
-
-  const hasEnvAuth = Object.values(envAuth).some((value) => value);
-  if (hasEnvAuth) {
-    const envValidation = validateAuth(envAuth);
-    if (envValidation.valid) {
-      return {
-        ...envAuth,
-        xEncode: typeof envAuth.xEncode === 'string' && envAuth.xEncode.trim()
-          ? envAuth.xEncode.trim()
-          : null
-      };
-    }
-
-    console.error(`环境变量中的认证信息不完整，缺少: ${envValidation.missing.join(', ')}。将尝试从文件读取。`);
-  }
-
   const authFileCandidates = [resolveAuthFile(authContext)];
 
   for (const authFile of authFileCandidates) {
@@ -233,10 +206,6 @@ async function ensureValidAuth(input = null) {
 
   if (probe.reason === 'request-failed') {
     throw probe.error;
-  }
-
-  if (hasAnyEnvAuth()) {
-    throw new Error('当前认证信息来自环境变量，脚本无法自动刷新。请先更新环境变量，或移除环境变量后改用 profile 登录');
   }
 
   if (probe.reason === 'missing-auth') {
