@@ -6,7 +6,6 @@
  *   node login.js [--profile 名称] [--profile-dir 目录] [--auth-file 文件]
  */
 
-const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const { resolveProfileFile, normalizeProfileName, getDefaultProfileDir } = require('./lib/profile_store');
@@ -80,75 +79,65 @@ function parseArgs(args) {
 
 async function main() {
   try {
-    const authContext = parseArgs(process.argv.slice(2));
-    const authFile = resolveProfileFile(authContext).filePath;
-
-    console.log('========================================');
-    console.log('上海图书馆登录获取认证信息');
-    console.log('========================================');
-    console.log(`目标文件: ${authFile}`);
-    console.log('');
-    console.log('将通过浏览器辅助完成以下步骤:');
-    console.log('1. 打开登录页面');
-    console.log('2. 你手动输入用户名、密码和验证码');
-    console.log('3. 登录成功后脚本自动检测并继续');
-    console.log('4. 自动调用 queryAuthInfo');
-    console.log('5. 保存 accessToken / sign / timestamp 到认证文件');
-    console.log('');
-    console.log('⚠️ 注意: 需要人工协助完成登录');
-    console.log('========================================\n');
-
-    const nodeScript = path.join(__dirname, 'login_and_get_auth_node.js');
-    if (!fs.existsSync(nodeScript)) {
-      console.error('❌ 错误: 浏览器登录脚本不存在');
-      console.error(`请确保 ${nodeScript} 存在`);
-      process.exit(1);
-    }
-
-    console.log('🚀 启动浏览器登录流程...\n');
-    const childArgs = [nodeScript];
-    if (authContext.profileName) {
-      childArgs.push('--profile', authContext.profileName);
-    }
-    if (authContext.profileDir) {
-      childArgs.push('--profile-dir', authContext.profileDir);
-    }
-    if (authContext.authFile) {
-      childArgs.push('--auth-file', authContext.authFile);
-    }
-
-    const child = spawn('node', childArgs, {
-      cwd: __dirname,
-      stdio: 'inherit'
-    });
-
-    child.on('close', (code) => {
-      if (code === 0) {
-        console.log('\n✅ 认证信息获取成功！');
-        console.log(`已保存到: ${authFile}`);
-
-        if (fs.existsSync(authFile)) {
-          try {
-            const auth = JSON.parse(fs.readFileSync(authFile, 'utf8'));
-            console.log('\n📋 认证信息预览:');
-            console.log(`  accessToken: ${auth.accessToken?.substring(0, 10)}...`);
-            console.log(`  sign: ${auth.sign?.substring(0, 10)}...`);
-            console.log(`  timestamp: ${auth.timestamp}`);
-          } catch (error) {
-            console.error('\n⚠️ 警告: 无法读取保存的认证文件');
-          }
-        }
-
-        process.exit(0);
-      } else {
-        console.error(`\n❌ 浏览器登录失败 (退出码: ${code})`);
-        process.exit(1);
-      }
-    });
+    const success = await runLoginCli();
+    process.exit(success ? 0 : 1);
   } catch (error) {
     console.error('\n💥 错误:', error.message);
     process.exit(1);
   }
 }
 
-main();
+async function runLoginCli(authContext = null) {
+  const resolvedAuthContext = authContext || parseArgs(process.argv.slice(2));
+  const authFile = resolveProfileFile(resolvedAuthContext).filePath;
+
+  console.log('========================================');
+  console.log('上海图书馆登录获取认证信息');
+  console.log('========================================');
+  console.log(`目标文件: ${authFile}`);
+  console.log('');
+  console.log('将通过浏览器辅助完成以下步骤:');
+  console.log('1. 打开登录页面');
+  console.log('2. 你手动输入用户名、密码和验证码');
+  console.log('3. 登录成功后脚本自动检测并继续');
+  console.log('4. 自动调用 queryAuthInfo');
+  console.log('5. 保存 accessToken / sign / timestamp 到认证文件');
+  console.log('');
+  console.log('⚠️ 注意: 需要人工协助完成登录');
+  console.log('========================================\n');
+
+  console.log('🚀 启动浏览器登录流程...\n');
+  const { runCli: runLoginAndGetAuthCli } = require('./login_and_get_auth_node');
+  const success = await runLoginAndGetAuthCli(resolvedAuthContext);
+  if (!success) {
+    console.error('\n❌ 浏览器登录失败');
+    return false;
+  }
+
+  console.log('\n✅ 认证信息获取成功！');
+  console.log(`已保存到: ${authFile}`);
+
+  if (fs.existsSync(authFile)) {
+    try {
+      const auth = JSON.parse(fs.readFileSync(authFile, 'utf8'));
+      console.log('\n📋 认证信息预览:');
+      console.log(`  accessToken: ${auth.accessToken?.substring(0, 10)}...`);
+      console.log(`  sign: ${auth.sign?.substring(0, 10)}...`);
+      console.log(`  timestamp: ${auth.timestamp}`);
+    } catch (error) {
+      console.error('\n⚠️ 警告: 无法读取保存的认证文件');
+    }
+  }
+
+  return true;
+}
+
+module.exports = {
+  parseArgs,
+  printUsage,
+  runLoginCli
+};
+
+if (require.main === module) {
+  main();
+}

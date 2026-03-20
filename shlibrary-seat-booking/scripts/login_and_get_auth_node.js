@@ -661,24 +661,7 @@ async function loginAndGetAuth(outputFile) {
 
 async function main() {
   try {
-    const authContext = parseArgs(process.argv.slice(2));
-    const outputFile = resolveProfileFile(authContext).filePath;
-
-    console.log('========================================');
-    console.log('上海图书馆登录获取认证信息 (Node.js)');
-    console.log('========================================');
-    console.log(`目标文件: ${outputFile}`);
-    console.log('');
-    console.log('当前流程:');
-    console.log('1. 打开登录页面');
-    console.log('2. 你手动完成用户名、密码、验证码登录');
-    console.log('3. 脚本自动打开预约入口并调用 queryAuthInfo');
-    console.log('4. 保存 accessToken / sign / timestamp 到 profile 文件');
-    console.log('');
-    console.log('ℹ️ x-encode 无需保存；book_seat.js 会在每次请求前动态生成');
-    console.log('========================================\n');
-
-    const success = await loginAndGetAuth(outputFile);
+    const success = await runCli();
     process.exit(success ? 0 : 1);
   } catch (error) {
     console.error('\n💥 错误:', error.message);
@@ -686,4 +669,37 @@ async function main() {
   }
 }
 
-main();
+async function runCli(authContext = null) {
+  const resolvedAuthContext = authContext || parseArgs(process.argv.slice(2));
+  const outputFile = resolveProfileFile(resolvedAuthContext).filePath;
+
+  console.log('========================================');
+  console.log('上海图书馆登录获取认证信息 (Node.js)');
+  console.log('========================================');
+  console.log(`目标文件: ${outputFile}`);
+  console.log('');
+  console.log('当前流程:');
+  console.log('1. 打开登录页面');
+  console.log('2. 你手动完成用户名、密码、验证码登录');
+  console.log('3. 脚本自动打开预约入口并调用 queryAuthInfo');
+  console.log('4. 保存 accessToken / sign / timestamp 到 profile 文件');
+  console.log('');
+  console.log('ℹ️ x-encode 无需保存；book_seat.js 会在每次请求前动态生成');
+  console.log('========================================\n');
+
+  return loginAndGetAuth(outputFile);
+}
+
+module.exports = {
+  parseArgs,
+  printUsage,
+  validateAuth,
+  saveAuthFile,
+  normalizeAuthPayload,
+  loginAndGetAuth,
+  runCli
+};
+
+if (require.main === module) {
+  main();
+}

@@ -1,7 +1,5 @@
 const crypto = require('crypto');
 const fs = require('fs');
-const path = require('path');
-const { spawnSync } = require('child_process');
 
 const {
   REQUIRED_AUTH_FIELDS,
@@ -166,32 +164,12 @@ async function probeAuth(input = null) {
   }
 }
 
-function runLogin(input = null) {
+async function runLogin(input = null) {
   const authContext = normalizeAuthContext(input);
-  const loginScript = path.join(__dirname, '..', 'login.js');
-  const args = [loginScript];
-
-  if (authContext.profileName) {
-    args.push('--profile', authContext.profileName);
-  }
-  if (authContext.profileDir) {
-    args.push('--profile-dir', authContext.profileDir);
-  }
-  if (authContext.authFile) {
-    args.push('--auth-file', authContext.authFile);
-  }
-
-  const result = spawnSync('node', args, {
-    cwd: path.join(__dirname, '..'),
-    stdio: 'inherit'
-  });
-
-  if (result.error) {
-    throw result.error;
-  }
-
-  if (result.status !== 0) {
-    throw new Error(`登录流程失败，退出码: ${result.status}`);
+  const { runLoginCli } = require('../login');
+  const success = await runLoginCli(authContext);
+  if (!success) {
+    throw new Error('登录流程失败');
   }
 }
 
@@ -217,7 +195,7 @@ async function ensureValidAuth(input = null) {
     console.log('⚠️ 当前没有可用认证信息，准备拉起登录流程...');
   }
 
-  runLogin(authContext);
+  await runLogin(authContext);
 
   const refreshedProbe = await probeAuth(authContext);
   if (!refreshedProbe.ok) {
