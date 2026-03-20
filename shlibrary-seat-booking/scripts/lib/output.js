@@ -2,15 +2,17 @@ const { getDailySlots } = require('./slots');
 
 function printUsage() {
   console.log('使用方法:');
-  console.log('  查询整天公共可用座位: node book_seat.js availability [--profile 名称] --date [日期] [--area 区域...]');
-  console.log('  查询已有预约:         node book_seat.js list [--profile 名称]');
-  console.log('  取消预约:             node book_seat.js cancel [--profile 名称] --reservation-id [预约ID]');
-  console.log('  预约座位:             node book_seat.js book [--profile 名称] --date [日期] [--period 上午|下午|晚上] [--area 区域] [--seat-row 排号] [--seat-no 座位号]');
+  console.log('  查询整天公共可用座位: node book_seat.js [--profile 名称] [--profile-dir 目录] [--auth-file 文件] availability --date [日期] [--area 区域...]');
+  console.log('  查询已有预约:         node book_seat.js [--profile 名称] [--profile-dir 目录] [--auth-file 文件] list');
+  console.log('  取消预约:             node book_seat.js [--profile 名称] [--profile-dir 目录] [--auth-file 文件] cancel --reservation-id [预约ID]');
+  console.log('  预约座位:             node book_seat.js [--profile 名称] [--profile-dir 目录] [--auth-file 文件] book --date [日期] [--period 上午|下午|晚上] [--area 区域] [--seat-row 排号] [--seat-no 座位号]');
   console.log('');
   console.log('示例:');
   console.log('  node book_seat.js availability --date 2026-03-20 --area 北区 东区');
   console.log('  node book_seat.js list --profile liurenyu');
+  console.log('  node book_seat.js list --auth-file ~/.config/shlibrary-seat-booking/profiles/user1.json');
   console.log('  node book_seat.js cancel --profile liurenyu --reservation-id 5187335');
+  console.log('  node book_seat.js availability --profile user1 --profile-dir ~/.config/shlibrary-seat-booking --date 2026-03-20');
   console.log('  node book_seat.js book --profile liurenyu --date 2026-03-24');
   console.log('  node book_seat.js book --date 2026-03-24 --period 上午');
   console.log('  node book_seat.js book --date 2026-03-24 --area 南区 --seat-row 4 --seat-no 5');
