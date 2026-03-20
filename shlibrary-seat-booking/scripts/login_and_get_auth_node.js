@@ -27,9 +27,9 @@ function printUsage() {
   console.log('');
   console.log('示例:');
   console.log('  node login_and_get_auth_node.js');
-  console.log('  node login_and_get_auth_node.js --profile liuyuanyi');
-  console.log('  node login_and_get_auth_node.js --profile liuyuanyi --profile-dir ~/.config/shlibrary-seat-booking');
-  console.log('  node login_and_get_auth_node.js --auth-file ~/.config/shlibrary-seat-booking/profiles/liuyuanyi.json');
+  console.log('  node login_and_get_auth_node.js --profile user1');
+  console.log('  node login_and_get_auth_node.js --profile user1 --profile-dir ~/.config/shlibrary-seat-booking');
+  console.log('  node login_and_get_auth_node.js --auth-file ~/.config/shlibrary-seat-booking/profiles/user1.json');
   console.log('');
   console.log(`默认 profile 根目录: ${path.join(getDefaultProfileDir(), 'profiles')}`);
 }

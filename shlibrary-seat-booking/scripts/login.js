@@ -17,9 +17,9 @@ function printUsage() {
   console.log('');
   console.log('示例:');
   console.log('  node login.js');
-  console.log('  node login.js --profile liurenyu');
-  console.log('  node login.js --profile liurenyu --profile-dir ~/.config/shlibrary-seat-booking');
-  console.log('  node login.js --auth-file ~/.config/shlibrary-seat-booking/profiles/liurenyu.json');
+  console.log('  node login.js --profile user1');
+  console.log('  node login.js --profile user1 --profile-dir ~/.config/shlibrary-seat-booking');
+  console.log('  node login.js --auth-file ~/.config/shlibrary-seat-booking/profiles/user1.json');
   console.log('');
   console.log(`默认 profile 根目录: ${path.join(getDefaultProfileDir(), 'profiles')}`);
 }

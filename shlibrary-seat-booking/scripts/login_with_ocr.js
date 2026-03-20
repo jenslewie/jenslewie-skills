@@ -42,10 +42,10 @@ function printUsage() {
   console.log('');
   console.log('示例:');
   console.log('  node login_with_ocr.js');
-  console.log(`  ${USERNAME_ENV}=your_user ${PASSWORD_ENV}=your_pass node login_with_ocr.js --profile liurenyu`);
-  console.log('  node login_with_ocr.js --profile liurenyu --profile-dir ~/.config/shlibrary-seat-booking');
-  console.log('  node login_with_ocr.js --auth-file ~/.config/shlibrary-seat-booking/profiles/liurenyu.json');
-  console.log('  node login_with_ocr.js --profile liurenyu --manual');
+  console.log(`  ${USERNAME_ENV}=your_user ${PASSWORD_ENV}=your_pass node login_with_ocr.js --profile user1`);
+  console.log('  node login_with_ocr.js --profile user1 --profile-dir ~/.config/shlibrary-seat-booking');
+  console.log('  node login_with_ocr.js --auth-file ~/.config/shlibrary-seat-booking/profiles/user1.json');
+  console.log('  node login_with_ocr.js --profile user1 --manual');
   console.log('');
   console.log(`默认 profile 根目录: ${path.join(getDefaultProfileDir(), 'profiles')}`);
 }
