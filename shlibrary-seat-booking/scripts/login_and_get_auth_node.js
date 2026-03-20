@@ -675,7 +675,7 @@ async function main() {
     console.log('3. 脚本自动打开预约入口并调用 queryAuthInfo');
     console.log('4. 保存 accessToken / sign / timestamp 到 profile 文件');
     console.log('');
-    console.log('⚠️ 现在不再保存静态 xEncode；book_seat.js 会在请求前动态生成');
+    console.log('ℹ️ x-encode 无需保存；book_seat.js 会在每次请求前动态生成');
     console.log('========================================\n');
 
     const success = await loginAndGetAuth(outputFile);
