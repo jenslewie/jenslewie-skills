@@ -2,15 +2,6 @@
   "name": "shlibrary-seat-booking",
   "description": "Shanghai Library East Branch 3F seat booking skill.",
   "license": "MIT-0",
-  "homepage": "https://github.com/jenslewie/jenslewie-skills/tree/main/shlibrary-seat-booking",
-  "bugs": {
-    "url": "https://github.com/jenslewie/jenslewie-skills/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jenslewie/jenslewie-skills.git",
-    "directory": "shlibrary-seat-booking"
-  },
   "engines": {
     "node": ">=18"
   },

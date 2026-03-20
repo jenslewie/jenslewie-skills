@@ -1,6 +1,27 @@
 ---
 name: shlibrary-seat-booking
 description: 上海图书馆东馆三楼座位预约。支持浏览器自动化登录获取认证信息，以及基于API的座位预约（指定座位或系统自动分配）。适用于需要自动化预约图书馆座位的场景。
+homepage: https://github.com/jenslewie/jenslewie-skills/tree/main/shlibrary-seat-booking
+metadata:
+  {
+    "openclaw":
+      {
+        "emoji": "📚",
+        "homepage": "https://github.com/jenslewie/jenslewie-skills/tree/main/shlibrary-seat-booking",
+        "requires": { "bins": ["node", "npm", "npx"] },
+        "install":
+          [
+            {
+              "id": "node-brew",
+              "kind": "brew",
+              "formula": "node",
+              "bins": ["node", "npm", "npx"],
+              "label": "Install Node.js (brew)",
+              "os": ["darwin"],
+            },
+          ],
+      },
+  }
 ---
 
 # 上海图书馆座位预约
